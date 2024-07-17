@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
+import blogService from '../services/blogService'
 
-const Blog = ({ blog }) => {
+const Blog = ({ blog, updateBlog }) => {
   const [detailsVisible, setDetailsVisible] = useState(false)
 
   const blogStyle = {
@@ -15,6 +16,25 @@ const Blog = ({ blog }) => {
     setDetailsVisible(!detailsVisible)
   }
 
+  const likeBlog = async () => {
+    if (!blog.id) {
+      console.error('Blog ID is missing')
+      return
+    }
+
+    const updatedBlog = {
+      ...blog,
+      likes: blog.likes + 1,
+      user: blog.user.id || blog.user
+    }
+
+    try {
+      await updateBlog(blog.id, updatedBlog)
+    } catch (error) {
+      console.error('Error liking the blog:', error)
+    }
+  }
+
   return (
     <div style={blogStyle}>
       <div>
@@ -23,7 +43,7 @@ const Blog = ({ blog }) => {
       {detailsVisible && (
         <div>
           <p>{blog.url}</p>
-          <p>{blog.likes} likes <button>like</button></p>
+          <p>{blog.likes} likes <button onClick={likeBlog}>like</button></p>
           {blog.user && <p>added by {blog.user.name}</p>}
         </div>
       )}

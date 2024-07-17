@@ -68,6 +68,22 @@ const App = () => {
     }
   }
 
+  const updateBlog = async (id, updatedBlog) => {
+    try {
+      const returnedBlog = await blogService.update(id, updatedBlog)
+      setBlogs(blogs.map(blog => blog.id === id ? returnedBlog : blog))
+      setNotification({ message: `Blog ${returnedBlog.title} updated`, type: 'success' })
+      setTimeout(() => {
+        setNotification({ message: null, type: null })
+      }, 5000)
+    } catch (exception) {
+      setNotification({ message: 'Failed to update blog', type: 'error' })
+      setTimeout(() => {
+        setNotification({ message: null, type: null })
+      }, 5000)
+    }
+  }
+
   if (user === null) {
     return (
       <div>
@@ -84,7 +100,7 @@ const App = () => {
       <Notification message={notification.message} type={notification.type} />
       <p>{user.name} logged in <button onClick={handleLogout}>logout</button></p>
       {blogs.map(blog =>
-        <Blog key={blog.id} blog={blog} />
+        <Blog key={blog.id} blog={blog} updateBlog={updateBlog} />
       )}
       <Togglable buttonLabel="create new blog" ref={blogFormRef}>
         <BlogForm createBlog={addBlog} />
