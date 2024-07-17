@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import blogService from '../services/blogService'
+import PropTypes from 'prop-types'
 
 const Blog = ({ blog, updateBlog, removeBlog, user }) => {
   const [detailsVisible, setDetailsVisible] = useState(false)
@@ -59,6 +59,26 @@ const Blog = ({ blog, updateBlog, removeBlog, user }) => {
       )}
     </div>
   )
+}
+
+Blog.propTypes = {
+  blog: PropTypes.shape({
+    id: PropTypes.string.isRequired,
+    title: PropTypes.string.isRequired,
+    author: PropTypes.string.isRequired,
+    url: PropTypes.string.isRequired,
+    likes: PropTypes.number.isRequired,
+    user: PropTypes.shape({
+      id: PropTypes.string,
+      username: PropTypes.string,
+      name: PropTypes.string,
+    }),
+  }).isRequired,
+  updateBlog: PropTypes.func.isRequired,
+  removeBlog: PropTypes.func.isRequired,
+  user: PropTypes.shape({
+    username: PropTypes.string.isRequired,
+  }).isRequired,
 }
 
 export default Blog
