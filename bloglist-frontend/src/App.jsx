@@ -87,6 +87,22 @@ const App = () => {
     }
   }
 
+  const removeBlog = async id => {
+    try {
+      await blogService.remove(id)
+      setBlogs(blogs.filter(blog => blog.id !== id).sort((a, b) => b.likes - a.likes)) // Järjestetään uudelleen poiston jälkeen
+      setNotification({ message: 'Blog removed', type: 'success' })
+      setTimeout(() => {
+        setNotification({ message: null, type: null })
+      }, 5000)
+    } catch (exception) {
+      setNotification({ message: 'Failed to remove blog', type: 'error' })
+      setTimeout(() => {
+        setNotification({ message: null, type: null })
+      }, 5000)
+    }
+  }
+
   if (user === null) {
     return (
       <div>
@@ -103,7 +119,7 @@ const App = () => {
       <Notification message={notification.message} type={notification.type} />
       <p>{user.name} logged in <button onClick={handleLogout}>logout</button></p>
       {blogs.map(blog =>
-        <Blog key={blog.id} blog={blog} updateBlog={updateBlog} />
+        <Blog key={blog.id} blog={blog} updateBlog={updateBlog} removeBlog={removeBlog} user={user} />
       )}
       <Togglable buttonLabel="create new blog" ref={blogFormRef}>
         <BlogForm createBlog={addBlog} />

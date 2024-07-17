@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import blogService from '../services/blogService'
 
-const Blog = ({ blog, updateBlog }) => {
+const Blog = ({ blog, updateBlog, removeBlog, user }) => {
   const [detailsVisible, setDetailsVisible] = useState(false)
 
   const blogStyle = {
@@ -25,13 +25,20 @@ const Blog = ({ blog, updateBlog }) => {
     const updatedBlog = {
       ...blog,
       likes: blog.likes + 1,
-      user: blog.user.id || blog.user
+      user: blog.user.id ? blog.user.id : blog.user // Varmistetaan, että user on oikeassa muodossa
     }
 
     try {
       await updateBlog(blog.id, updatedBlog)
     } catch (error) {
       console.error('Error liking the blog:', error)
+    }
+  }
+
+  const deleteBlog = () => {
+    const confirmDelete = window.confirm(`Remove blog ${blog.title} by ${blog.author}?`)
+    if (confirmDelete) {
+      removeBlog(blog.id)
     }
   }
 
@@ -44,7 +51,10 @@ const Blog = ({ blog, updateBlog }) => {
         <div>
           <p>{blog.url}</p>
           <p>{blog.likes} likes <button onClick={likeBlog}>like</button></p>
-          {blog.user && <p>added by {blog.user.name}</p>}
+          {blog.user && blog.user.name && <p>added by {blog.user.name}</p>}
+          {user.username === blog.user.username && (
+            <button onClick={deleteBlog}>delete</button>
+          )}
         </div>
       )}
     </div>
