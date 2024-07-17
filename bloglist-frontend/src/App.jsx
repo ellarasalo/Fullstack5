@@ -15,7 +15,10 @@ const App = () => {
   const blogFormRef = useRef()
 
   useEffect(() => {
-    blogService.getAll().then(initialBlogs => setBlogs(initialBlogs))
+    blogService.getAll().then(initialBlogs => {
+      initialBlogs.sort((a, b) => b.likes - a.likes) // Järjestetään blogit likejen mukaan
+      setBlogs(initialBlogs)
+    })
   }, [])
 
   useEffect(() => {
@@ -54,7 +57,7 @@ const App = () => {
   const addBlog = async (blogObject) => {
     try {
       const newBlog = await blogService.create(blogObject)
-      setBlogs(blogs.concat(newBlog))
+      setBlogs(blogs.concat(newBlog).sort((a, b) => b.likes - a.likes)) // Järjestetään uudelleen lisäyksen jälkeen
       setNotification({ message: `a new blog ${newBlog.title} by ${newBlog.author} added`, type: 'success' })
       setTimeout(() => {
         setNotification({ message: null, type: null })
@@ -71,7 +74,7 @@ const App = () => {
   const updateBlog = async (id, updatedBlog) => {
     try {
       const returnedBlog = await blogService.update(id, updatedBlog)
-      setBlogs(blogs.map(blog => blog.id === id ? returnedBlog : blog))
+      setBlogs(blogs.map(blog => blog.id === id ? returnedBlog : blog).sort((a, b) => b.likes - a.likes)) // Järjestetään uudelleen päivityksen jälkeen
       setNotification({ message: `Blog ${returnedBlog.title} updated`, type: 'success' })
       setTimeout(() => {
         setNotification({ message: null, type: null })
