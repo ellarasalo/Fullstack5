@@ -1,25 +1,24 @@
 import React, { useState } from 'react'
 
 const BlogForm = ({ createBlog }) => {
-  const [newTitle, setNewTitle] = useState('')
-  const [newAuthor, setNewAuthor] = useState('')
-  const [newUrl, setNewUrl] = useState('')
+  const [title, setTitle] = useState('')
+  const [author, setAuthor] = useState('')
+  const [url, setUrl] = useState('')
 
-  const handleTitleChange = (event) => setNewTitle(event.target.value)
-  const handleAuthorChange = (event) => setNewAuthor(event.target.value)
-  const handleUrlChange = (event) => setNewUrl(event.target.value)
+  const handleTitleChange = (event) => setTitle(event.target.value)
+  const handleAuthorChange = (event) => setAuthor(event.target.value)
+  const handleUrlChange = (event) => setUrl(event.target.value)
 
   const addBlog = (event) => {
     event.preventDefault()
     createBlog({
-      title: newTitle,
-      author: newAuthor,
-      url: newUrl
+      title,
+      author,
+      url
     })
-
-    setNewTitle('')
-    setNewAuthor('')
-    setNewUrl('')
+    setTitle('')
+    setAuthor('')
+    setUrl('')
   }
 
   return (
@@ -29,21 +28,21 @@ const BlogForm = ({ createBlog }) => {
         <div>
           title:
           <input
-            value={newTitle}
+            value={title}
             onChange={handleTitleChange}
           />
         </div>
         <div>
           author:
           <input
-            value={newAuthor}
+            value={author}
             onChange={handleAuthorChange}
           />
         </div>
         <div>
           url:
           <input
-            value={newUrl}
+            value={url}
             onChange={handleUrlChange}
           />
         </div>
